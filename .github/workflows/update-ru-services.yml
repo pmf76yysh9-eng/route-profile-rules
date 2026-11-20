@@ -14,15 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Convert source list
-        run: python3 scripts/update_ru_services.py
+        run: |
+          python3 scripts/update_ru_services.py
+          python3 scripts/update_ru_mobile_ip.py
       - name: Commit changes
         run: |
-          if git diff --quiet -- ru-services.list; then
+          if git diff --quiet -- ru-services.list ru-mobile-ip.list; then
             echo "No changes"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ru-services.list
+          git add ru-services.list ru-mobile-ip.list
           git commit -m "Update Russian service rules"
           git push
