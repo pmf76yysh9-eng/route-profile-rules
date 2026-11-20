@@ -27,7 +27,7 @@ for net in lite:
     if index >= 0 and net.subnet_of(ru[index]):
         kept.append(net)
 
-if not 500 <= len(kept) <= 3000 or ipaddress.IPv4Address("1.1.1.1") in kept:
+if not 500 <= len(kept) <= 3000 or any(ipaddress.IPv4Address("1.1.1.1") in net for net in kept):
     raise SystemExit(f"Unexpected RU-only mobile IP list: {len(kept)}")
 
 header = (
