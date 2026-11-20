@@ -1,0 +1,28 @@
+name: Refresh Russian service rules
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Convert source list
+        run: python3 scripts/update_ru_services.py
+      - name: Commit changes
+        run: |
+          if git diff --quiet -- ru-services.list; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ru-services.list
+          git commit -m "Update Russian service rules"
+          git push
